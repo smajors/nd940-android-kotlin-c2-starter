@@ -17,7 +17,7 @@ interface NearEarthObjectDao {
     fun getAllNearEarthObjects() : LiveData<List<DatabaseNearEarthObjects>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllNearEarthObjects(vararg nearEarthObjects: NearEarthObject)
+    fun insertAllNearEarthObjects(vararg nearEarthObjects: DatabaseNearEarthObjects)
 }
 
 @Database(entities = [DatabaseNearEarthObjects::class], version = 1)
@@ -30,6 +30,8 @@ abstract class NasaDatabase : RoomDatabase() {
         const val DATABASE_NAME = "NasaDatabase"
         const val GET_ALL_NEAR_EARTH_OBJECTS = "select * from databasenearearthobjects"
     }
+
+    abstract val nearEarthObjectDao: NearEarthObjectDao
 }
 
 fun getDatabase(context: Context) : NasaDatabase {

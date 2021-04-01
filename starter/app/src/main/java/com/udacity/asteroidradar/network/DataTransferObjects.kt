@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.network
 
 import com.squareup.moshi.JsonClass
+import com.udacity.asteroidradar.database.DatabaseNearEarthObjects
 import com.udacity.asteroidradar.domain.NearEarthObject
 import timber.log.Timber
 
@@ -25,7 +26,7 @@ data class NetworkNearEarthObject(
 )
 
 /**
- * Converts Network JSON results to the domain model
+ * Converts Network JSON results to the domain model objects
  */
 fun NetworkNearEarthObjectContainer.asDomainModel() : List<NearEarthObject> {
     Timber.d("Converting Network Objects to Domain Objects")
@@ -39,5 +40,22 @@ fun NetworkNearEarthObjectContainer.asDomainModel() : List<NearEarthObject> {
             astronomical = it.astronomical
         )
     }
+}
+
+/**
+ * Converts Network JSON results to database model objects
+ */
+fun NetworkNearEarthObjectContainer.asDatabaseModel(): Array<DatabaseNearEarthObjects> {
+    Timber.d("Converting Network Objects to Database Objects")
+    return nearEarthObjects.map {
+        DatabaseNearEarthObjects(
+            id = it.id,
+            absolute_magnitude = it.absolute_magnitude,
+            estimated_max_diameter = it.estimated_diameter_max,
+            potentially_hazardous_flg = it.is_potentially_hazardous_asteroid,
+            kilometers_per_second = it.kilometers_per_second,
+            astronomical = it.astronomical
+        )
+    }.toTypedArray()
 }
 
