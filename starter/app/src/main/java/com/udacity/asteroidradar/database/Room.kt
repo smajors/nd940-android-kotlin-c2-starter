@@ -28,7 +28,7 @@ abstract class NasaDatabase : RoomDatabase() {
      */
     companion object {
         const val DATABASE_NAME = "NasaDatabase"
-        const val GET_ALL_NEAR_EARTH_OBJECTS = "select * from databasenearearthobjects"
+        const val GET_ALL_NEAR_EARTH_OBJECTS = "select * from databasenearearthobjects order by date desc"
     }
 
     abstract val nearEarthObjectDao: NearEarthObjectDao
@@ -44,7 +44,6 @@ fun getDatabase(context: Context) : NasaDatabase {
             Timber.d("Database instance created.")
         }
     }
-
     Timber.d("Returning database instance.")
     return INSTANCE
 }

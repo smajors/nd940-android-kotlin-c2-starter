@@ -8,10 +8,14 @@
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.domain.NearEarthObject" />
+    <variable
+        name="listener"
+        type="com.udacity.asteroidradar.NearEarthObjectsAdapter.AsteroidListener" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> listener.onClick(asteroid)}">
 
         <TextView
             android:id="@+id/name_text"
@@ -22,6 +26,7 @@
             android:textSize="@dimen/large_text_size"
             android:textStyle="bold"
             android:text="@{asteroid.codeName}"
+            android:textColor="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/asteroid_name_placeholder" />
@@ -34,6 +39,7 @@
             android:layout_marginTop="@dimen/standard_margin_spacing"
             android:textSize="@dimen/standard_text_size"
             android:text="@{asteroid.date}"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name_text"
@@ -43,10 +49,9 @@
             android:id="@+id/danger_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            app:statusIcon="@{asteroid.potentiallyHazardousAsteroid}"
             android:layout_marginEnd="24dp"
             android:contentDescription="@string/hazardous_description"
-
             app:layout_constraintBottom_toBottomOf="@+id/date_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/name_text"

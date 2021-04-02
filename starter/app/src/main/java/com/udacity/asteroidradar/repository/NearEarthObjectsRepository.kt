@@ -52,7 +52,7 @@ class NearEarthObjectsRepository(private val database: NasaDatabase) {
 
                 asteroidList.add(dbAsteroid)
             }
-            database.nearEarthObjectDao.insertAllNearEarthObjects(*parseAsteroidsJsonResult(JSONObject(nearEarthObjects.toString())).asDatabaseModel())
+            database.nearEarthObjectDao.insertAllNearEarthObjects(*parseAsteroidsJsonResult(JSONObject(nearEarthObjects)).asDatabaseModel())
             Timber.d("Exiting IO Scope.")
         }
     }

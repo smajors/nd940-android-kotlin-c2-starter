@@ -1,11 +1,10 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.database.getDatabase
+import com.udacity.asteroidradar.domain.NearEarthObject
 import com.udacity.asteroidradar.repository.NearEarthObjectsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -18,11 +17,30 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val asteroids = nearEarthObjectsRepository.nearEarthObjects
 
+    // Navigation Live Data
+    private val _detailNavigation = MutableLiveData<NearEarthObject>()
+    val detailNavigation
+     get() = _detailNavigation
+
     init {
         Timber.d("init() MainViewModel")
         viewModelScope.launch {
             nearEarthObjectsRepository.refreshNearEarthObjects()
         }
+    }
+
+    /**
+     * Global onClickHandler for Asteroid List Items
+     */
+    fun onObjectClick(asteroid: NearEarthObject) {
+        _detailNavigation.value = asteroid
+    }
+
+    /**
+     * Global function to reset navigation state
+     */
+    fun onObjectClickNavigation() {
+        _detailNavigation.value = null
     }
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
