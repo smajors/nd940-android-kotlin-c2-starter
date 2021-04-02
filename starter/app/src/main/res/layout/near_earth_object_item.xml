@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="asteroid"
+            type="com.udacity.asteroidradar.domain.NearEarthObject" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard_margin_spacing"
+            android:layout_marginTop="@dimen/standard_margin_spacing"
+            android:textSize="@dimen/large_text_size"
+            android:textStyle="bold"
+            android:text="@{asteroid.codeName}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/asteroid_name_placeholder" />
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard_margin_spacing"
+            android:layout_marginTop="@dimen/standard_margin_spacing"
+            android:textSize="@dimen/standard_text_size"
+            android:text="@{asteroid.date}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name_text"
+            tools:text="@string/asteroid_date_placeholder" />
+
+        <ImageView
+            android:id="@+id/danger_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="24dp"
+            android:contentDescription="@string/hazardous_description"
+
+            app:layout_constraintBottom_toBottomOf="@+id/date_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/name_text"
+            app:srcCompat="@drawable/ic_status_normal" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

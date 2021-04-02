@@ -7,14 +7,17 @@ import com.udacity.asteroidradar.Constants
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  * Retrofit service to fetch the list of Near Earth Asteroids
  */
 interface NasaApiService {
-    @GET(value = "neo/rest/v1")
-    fun getNearEarthObjectsAsync() : Deferred<NetworkNearEarthObjectContainer>
+    @GET(value = "neo/rest/v1/feed")
+    fun getNearEarthObjectsAsync(@Query("api_key") apiKey: String,
+                                @Query("start_date") startDate: String) : Deferred<String>
 }
 
 /**
@@ -31,6 +34,7 @@ object Network {
     private val retrofit = Retrofit.Builder()
         .baseUrl(
             Constants.BASE_URL)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()

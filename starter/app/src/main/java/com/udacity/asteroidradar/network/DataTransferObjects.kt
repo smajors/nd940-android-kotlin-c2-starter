@@ -18,6 +18,8 @@ data class NetworkNearEarthObjectContainer(val nearEarthObjects: List<NetworkNea
 @JsonClass(generateAdapter = true)
 data class NetworkNearEarthObject(
     val id: Long,
+    val code_name: String,
+    val date: String,
     val absolute_magnitude: Double,
     val estimated_diameter_max: Double,
     val is_potentially_hazardous_asteroid: Boolean,
@@ -33,6 +35,8 @@ fun NetworkNearEarthObjectContainer.asDomainModel() : List<NearEarthObject> {
     return nearEarthObjects.map {
         NearEarthObject(
             id = it.id,
+            codeName = it.code_name,
+            date = it.date,
             absoluteMagnitude = it.absolute_magnitude,
             estimatedDiameterMax =  it.estimated_diameter_max,
             isPotentiallyHazardousAsteroid = it.is_potentially_hazardous_asteroid,
@@ -50,6 +54,8 @@ fun NetworkNearEarthObjectContainer.asDatabaseModel(): Array<DatabaseNearEarthOb
     return nearEarthObjects.map {
         DatabaseNearEarthObjects(
             id = it.id,
+            code_name = it.code_name,
+            date = it.date,
             absolute_magnitude = it.absolute_magnitude,
             estimated_max_diameter = it.estimated_diameter_max,
             potentially_hazardous_flg = it.is_potentially_hazardous_asteroid,
