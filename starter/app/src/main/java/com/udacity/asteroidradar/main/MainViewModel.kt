@@ -19,7 +19,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // Navigation Live Data
     private val _detailNavigation = MutableLiveData<NearEarthObject>()
-    val detailNavigation
+    val detailNavigation: LiveData<NearEarthObject>
      get() = _detailNavigation
 
     init {

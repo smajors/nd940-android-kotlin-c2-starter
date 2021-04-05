@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,14 @@ class MainFragment : Fragment() {
             it?.let {
                 Timber.d("Adapter has new items. Submitting new list.")
                 adapter.submitList(it)
+            }
+        })
+
+        viewModel.detailNavigation.observe(viewLifecycleOwner, Observer {
+            if (null != it) {
+                Timber.d("Navigation for asteroid ${it.codeName}")
+                this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
+                viewModel.onObjectClickNavigation()
             }
         })
 

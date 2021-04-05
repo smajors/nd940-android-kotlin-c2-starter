@@ -31,29 +31,19 @@ class NearEarthObjectsRepository(private val database: NasaDatabase) {
         Timber.d("Refreshing all Near Earth Objects from NASA API request")
         // Run this request in the IO Context
         withContext(Dispatchers.IO) {
-            Timber.d("Changed to IO Scope to run request")
-            val todaysDate = Utils.convertDateStringToFormattedString(Calendar.getInstance().time, Constants.API_QUERY_DATE_FORMAT)
-            val nearEarthObjects = Network.nasaApi.getNearEarthObjectsAsync(Constants.API_KEY, todaysDate).await()
-            Timber.d("Retrieved Near Earth Objects from NASA API. Parsing JSON response.")
-            val parsedAsteroids = parseAsteroidsJsonResult(JSONObject(nearEarthObjects))
-            val asteroidList = mutableListOf<DatabaseNearEarthObjects>()
-
-            for (asteroid in parsedAsteroids) {
-                val dbAsteroid = DatabaseNearEarthObjects(
-                        asteroid.id,
-                        asteroid.codeName,
-                        asteroid.date,
-                        asteroid.absoluteMagnitude,
-                        asteroid.estimatedDiameterMax,
-                        asteroid.isPotentiallyHazardousAsteroid,
-                        asteroid.kilometersPerSecond,
-                        asteroid.astronomical
-                )
-
-                asteroidList.add(dbAsteroid)
+            // Try statement is used to catch Network Exceptions so the app does not
+            // crash when attempting to load without a network connection
+            try {
+                Timber.d("Changed to IO Scope to run request")
+                val todaysDate = Utils.convertDateStringToFormattedString(Calendar.getInstance().time, Constants.API_QUERY_DATE_FORMAT)
+                val nearEarthObjects = Network.nasaApi.getNearEarthObjectsAsync(Constants.API_KEY, todaysDate).await()
+                Timber.d("Retrieved Near Earth Objects from NASA API. Parsing JSON response.")
+                database.nearEarthObjectDao.insertAllNearEarthObjects(*parseAsteroidsJsonResult(JSONObject(nearEarthObjects)).asDatabaseModel())
+                Timber.d("Exiting IO Scope.")
+            } catch (e: Exception) {
+                Timber.e(e)
             }
-            database.nearEarthObjectDao.insertAllNearEarthObjects(*parseAsteroidsJsonResult(JSONObject(nearEarthObjects)).asDatabaseModel())
-            Timber.d("Exiting IO Scope.")
+
         }
     }
 }

@@ -33,13 +33,14 @@ class NearEarthObjectsAdapter(val listener: AsteroidListener) : ListAdapter<Near
 
     override fun onBindViewHolder(holder: NearEarthObjectViewHolder, position: Int) {
         val asteroid = getItem(position)
-        holder.bind(asteroid!!)
+        holder.bind(asteroid!!, listener)
     }
 
     class NearEarthObjectViewHolder(val viewDataBinding: NearEarthObjectItemBinding) :
             RecyclerView.ViewHolder(viewDataBinding.root) {
-        fun bind(asteroid: NearEarthObject) {
+        fun bind(asteroid: NearEarthObject, listener: AsteroidListener) {
             viewDataBinding.asteroid = asteroid
+            viewDataBinding.listener = listener
             Timber.d("Item: ${asteroid.codeName} / ${asteroid.date} / ${asteroid.isPotentiallyHazardousAsteroid}")
             viewDataBinding.executePendingBindings()
         }
