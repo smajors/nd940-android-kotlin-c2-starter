@@ -3,7 +3,6 @@ package com.udacity.asteroidradar.database
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.udacity.asteroidradar.domain.NearEarthObject
 import timber.log.Timber
 
 /**
@@ -20,7 +19,16 @@ interface NearEarthObjectDao {
     fun insertAllNearEarthObjects(vararg nearEarthObjects: DatabaseNearEarthObjects)
 }
 
-@Database(entities = [DatabaseNearEarthObjects::class], version = 1)
+@Dao
+interface PictureOfDayDao {
+    @Query(NasaDatabase.GET_PICTURE_OF_DAY)
+    fun getPictureOfDay() : LiveData<DatabasePictureOfDay>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPictureOfDay(pictureOfDay: DatabasePictureOfDay)
+}
+
+@Database(entities = [DatabaseNearEarthObjects::class, DatabasePictureOfDay::class], version = 3)
 abstract class NasaDatabase : RoomDatabase() {
     /**
      * All queries are stored in this object
@@ -29,9 +37,11 @@ abstract class NasaDatabase : RoomDatabase() {
     companion object {
         const val DATABASE_NAME = "NasaDatabase"
         const val GET_ALL_NEAR_EARTH_OBJECTS = "select * from databasenearearthobjects order by date desc"
+        const val GET_PICTURE_OF_DAY = "select * from databasepictureofday where date = (SELECT date('now'))"
     }
 
     abstract val nearEarthObjectDao: NearEarthObjectDao
+    abstract val pictureOfDayDao: PictureOfDayDao
 }
 
 fun getDatabase(context: Context) : NasaDatabase {
@@ -40,7 +50,9 @@ fun getDatabase(context: Context) : NasaDatabase {
         // If the instance does not exist, create it.
         if (!::INSTANCE.isInitialized) {
             Timber.d("Database instance does not exist. Creating database instance.")
-            INSTANCE = Room.databaseBuilder(context.applicationContext, NasaDatabase::class.java, NasaDatabase.DATABASE_NAME).build()
+            INSTANCE = Room.databaseBuilder(context.applicationContext, NasaDatabase::class.java, NasaDatabase.DATABASE_NAME)
+                    .fallbackToDestructiveMigration()
+                    .build()
             Timber.d("Database instance created.")
         }
     }

@@ -1,7 +1,9 @@
 package com.udacity.asteroidradar.database
 
+import androidx.lifecycle.Transformations.map
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.domain.NearEarthObject
 import timber.log.Timber
 
@@ -19,6 +21,15 @@ data class DatabaseNearEarthObjects constructor(
     val potentially_hazardous_flg: Boolean,
     val kilometers_per_second: Double,
     val astronomical: Double
+)
+
+@Entity
+data class DatabasePictureOfDay constructor(
+        @PrimaryKey
+        val date: String,
+        val media_type: String,
+        val title: String,
+        val url: String
 )
 
 /**
@@ -40,6 +51,26 @@ fun List<DatabaseNearEarthObjects>.asDomainModel() : List<NearEarthObject> {
         )
     }
 
+}
+
+fun DatabasePictureOfDay.asDomainModel() : PictureOfDay {
+    Timber.d("Converting database objects to domain objects")
+    return PictureOfDay(
+            date,
+            media_type,
+            title,
+            url
+    )
+}
+
+fun PictureOfDay.asDatabaseModel() : DatabasePictureOfDay {
+    Timber.d("Converting domain objects to database objects")
+    return DatabasePictureOfDay(
+            date,
+            mediaType,
+            title,
+            url
+    )
 }
 
 fun List<NearEarthObject>.asDatabaseModel(): Array<DatabaseNearEarthObjects> {

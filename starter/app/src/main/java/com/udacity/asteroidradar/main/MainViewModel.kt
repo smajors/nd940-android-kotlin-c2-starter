@@ -6,6 +6,7 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.domain.NearEarthObject
 import com.udacity.asteroidradar.repository.NearEarthObjectsRepository
+import com.udacity.asteroidradar.repository.PictureOfTheDayRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.IllegalArgumentException
@@ -14,8 +15,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
     private val nearEarthObjectsRepository = NearEarthObjectsRepository(database)
+    private val pictureOfTheDayRepository = PictureOfTheDayRepository(database)
 
     val asteroids = nearEarthObjectsRepository.nearEarthObjects
+    val pictureOfDay = pictureOfTheDayRepository.pictureOfTheDay
 
     // Navigation Live Data
     private val _detailNavigation = MutableLiveData<NearEarthObject>()
@@ -26,6 +29,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         Timber.d("init() MainViewModel")
         viewModelScope.launch {
             nearEarthObjectsRepository.refreshNearEarthObjects()
+            pictureOfTheDayRepository.refreshPictureOfTheDay()
         }
     }
 

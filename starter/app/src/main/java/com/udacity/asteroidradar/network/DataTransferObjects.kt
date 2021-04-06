@@ -27,6 +27,14 @@ data class NetworkNearEarthObject(
     val astronomical: Double
 )
 
+@JsonClass(generateAdapter = true)
+data class NetworkPictureOfDay(
+        val date: String,
+        val mediaType: String,
+        val title: String,
+        val url: String
+)
+
 /**
  * Converts Network JSON results to the domain model objects
  */
