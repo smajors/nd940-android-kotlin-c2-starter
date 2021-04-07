@@ -37,7 +37,7 @@ data class DatabasePictureOfDay constructor(
  * objects [DatabaseNearEarthObjects]
  */
 fun List<DatabaseNearEarthObjects>.asDomainModel() : List<NearEarthObject> {
-    Timber.d("Converting database objects to domain objects")
+    Timber.d("NearEarthObject: Converting database objects to domain objects")
     return map {
         NearEarthObject(
             id = it.id,
@@ -54,7 +54,7 @@ fun List<DatabaseNearEarthObjects>.asDomainModel() : List<NearEarthObject> {
 }
 
 fun DatabasePictureOfDay.asDomainModel() : PictureOfDay {
-    Timber.d("Converting database objects to domain objects")
+    Timber.d("PictureOfDay: Converting database objects to domain objects")
     return PictureOfDay(
             date,
             media_type,
@@ -64,7 +64,7 @@ fun DatabasePictureOfDay.asDomainModel() : PictureOfDay {
 }
 
 fun PictureOfDay.asDatabaseModel() : DatabasePictureOfDay {
-    Timber.d("Converting domain objects to database objects")
+    Timber.d("PictureOfDay: Converting domain objects to database objects")
     return DatabasePictureOfDay(
             date,
             mediaType,
@@ -74,6 +74,7 @@ fun PictureOfDay.asDatabaseModel() : DatabasePictureOfDay {
 }
 
 fun List<NearEarthObject>.asDatabaseModel(): Array<DatabaseNearEarthObjects> {
+    Timber.d("NearEarthObject: Converting domain objects to database objects")
     return map {
         DatabaseNearEarthObjects (
                 id = it.id,

@@ -37,7 +37,7 @@ abstract class NasaDatabase : RoomDatabase() {
     companion object {
         const val DATABASE_NAME = "NasaDatabase"
         const val GET_ALL_NEAR_EARTH_OBJECTS = "select * from databasenearearthobjects order by date desc"
-        const val GET_PICTURE_OF_DAY = "select * from databasepictureofday where date = (SELECT date('now'))"
+        const val GET_PICTURE_OF_DAY = "SELECT * FROM DatabasePictureOfDay pod  ORDER BY pod.date DESC LIMIT 0,1"
     }
 
     abstract val nearEarthObjectDao: NearEarthObjectDao
