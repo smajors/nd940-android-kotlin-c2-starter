@@ -14,7 +14,7 @@ import java.lang.IllegalArgumentException
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
-    private val filter = MutableLiveData(ObjectFilter.TODAY)
+    private val filter = MutableLiveData(ObjectFilter.WEEKLY)
     private val nearEarthObjectsRepository = NearEarthObjectsRepository(database)
     private val pictureOfTheDayRepository = PictureOfTheDayRepository(database)
 

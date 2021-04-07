@@ -22,4 +22,5 @@
     <string name="asteroid_name_placeholder">012345 (2021 AABBCC55)</string>
     <string name="asteroid_date_placeholder">2021-04-01</string>
     <string name="hazardous_description">Earth Hazard? %s</string>
+    <string name="help_button_text">Get help on this item</string>
 </resources>
