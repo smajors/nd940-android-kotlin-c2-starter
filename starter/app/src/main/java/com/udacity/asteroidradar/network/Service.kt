@@ -19,7 +19,7 @@ interface NasaApiService {
     /**
      * Endpoint for Near earth objects
      */
-    @GET(value = "neo/rest/v1/feed&api_key={${Constants.API_KEY}}")
+    @GET(value = "neo/rest/v1/feed?api_key=${Constants.API_KEY}")
     fun getNearEarthObjectsAsync() : Deferred<String>
 
     /**
