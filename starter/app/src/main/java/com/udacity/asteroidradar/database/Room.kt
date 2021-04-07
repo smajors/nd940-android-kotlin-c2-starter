@@ -15,6 +15,12 @@ interface NearEarthObjectDao {
     @Query(NasaDatabase.GET_ALL_NEAR_EARTH_OBJECTS)
     fun getAllNearEarthObjects() : LiveData<List<DatabaseNearEarthObjects>>
 
+    @Query(NasaDatabase.GET_WEEKLY_NEAR_EARTH_OBJECTS)
+    fun getWeeklyNearEarthObjects(startDate: String, endDate: String) : LiveData<List<DatabaseNearEarthObjects>>
+
+    @Query(NasaDatabase.GET_TODAY_OBJECTS)
+    fun getTodayNearEarthObjects(today: String) : LiveData<List<DatabaseNearEarthObjects>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllNearEarthObjects(vararg nearEarthObjects: DatabaseNearEarthObjects)
 }
@@ -37,6 +43,8 @@ abstract class NasaDatabase : RoomDatabase() {
     companion object {
         const val DATABASE_NAME = "NasaDatabase"
         const val GET_ALL_NEAR_EARTH_OBJECTS = "select * from databasenearearthobjects order by date desc"
+        const val GET_WEEKLY_NEAR_EARTH_OBJECTS = "SELECT * FROM databasenearearthobjects obj WHERE obj.date BETWEEN :startDate AND :endDate order by date desc"
+        const val GET_TODAY_OBJECTS = "SELECT * FROM databasenearearthobjects obj WHERE obj.date = :today"
         const val GET_PICTURE_OF_DAY = "SELECT * FROM DatabasePictureOfDay pod  ORDER BY pod.date DESC LIMIT 0,1"
     }
 

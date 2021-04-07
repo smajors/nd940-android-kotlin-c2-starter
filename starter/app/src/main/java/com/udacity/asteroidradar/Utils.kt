@@ -10,6 +10,13 @@ class Utils {
             val formatter = SimpleDateFormat(format, locale)
             return formatter.format(date)
         }
+
+        fun addDaysToDate(date: Date, daysToAdd: Int) : Date {
+            val c = Calendar.getInstance()
+            c.time = date
+            c.add(Calendar.DATE, daysToAdd)
+            return c.time
+        }
     }
 
 }

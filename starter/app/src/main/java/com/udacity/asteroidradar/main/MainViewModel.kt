@@ -14,10 +14,17 @@ import java.lang.IllegalArgumentException
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
+    private val filter = MutableLiveData(ObjectFilter.TODAY)
     private val nearEarthObjectsRepository = NearEarthObjectsRepository(database)
     private val pictureOfTheDayRepository = PictureOfTheDayRepository(database)
 
-    val asteroids = nearEarthObjectsRepository.nearEarthObjects
+    val asteroids = Transformations.switchMap(filter) {
+        when (it!!) {
+            ObjectFilter.WEEKLY -> nearEarthObjectsRepository.weeklyNearEarthObjects
+            ObjectFilter.TODAY -> nearEarthObjectsRepository.todayNearEarthObjects
+            else -> nearEarthObjectsRepository.nearEarthObjects
+        }
+    }
     val pictureOfDay = pictureOfTheDayRepository.pictureOfTheDay
 
     // Navigation Live Data
@@ -60,4 +67,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             throw e
         }
     }
+
+    enum class ObjectFilter {
+        ALL,
+        TODAY,
+        WEEKLY
+    }
+
 }

@@ -10,6 +10,7 @@ import com.udacity.asteroidradar.database.NasaDatabase
 import com.udacity.asteroidradar.database.asDatabaseModel
 import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.domain.NearEarthObject
+import com.udacity.asteroidradar.main.MainViewModel
 import com.udacity.asteroidradar.network.Network
 import com.udacity.asteroidradar.network.asDatabaseModel
 import kotlinx.coroutines.Dispatchers
@@ -19,8 +20,26 @@ import timber.log.Timber
 import java.util.*
 
 class NearEarthObjectsRepository(private val database: NasaDatabase) {
+    private val todaysDate = Utils.convertDateStringToFormattedString(Calendar.getInstance().time, Constants.API_QUERY_DATE_FORMAT)
+    private val todayPlusSeven = Utils.convertDateStringToFormattedString(
+            Utils.addDaysToDate(Calendar.getInstance().time, 7),
+            Constants.API_QUERY_DATE_FORMAT)
     // LiveData for all Near earth objects
     val nearEarthObjects: LiveData<List<NearEarthObject>> = Transformations.map(database.nearEarthObjectDao.getAllNearEarthObjects()) {
+        Timber.d("All Asteroids were updated")
+        it.asDomainModel()
+    }
+
+    // Livedata for weekly objects between todays date and 7 days
+    val weeklyNearEarthObjects: LiveData<List<NearEarthObject>> = Transformations.map(database.nearEarthObjectDao.getWeeklyNearEarthObjects(todaysDate, todayPlusSeven)) {
+        Timber.d("Weekly Asteroids was updated")
+        it.asDomainModel()
+    }
+
+    // Livedata for today objects only
+    // Livedata for weekly objects between todays date and 7 days
+    val todayNearEarthObjects: LiveData<List<NearEarthObject>> = Transformations.map(database.nearEarthObjectDao.getTodayNearEarthObjects(todaysDate)) {
+        Timber.d("Weekly Asteroids was updated")
         it.asDomainModel()
     }
 
@@ -35,8 +54,8 @@ class NearEarthObjectsRepository(private val database: NasaDatabase) {
             // crash when attempting to load without a network connection
             try {
                 Timber.d("Changed to IO Scope to run request")
-                val todaysDate = Utils.convertDateStringToFormattedString(Calendar.getInstance().time, Constants.API_QUERY_DATE_FORMAT)
-                val nearEarthObjects = Network.nasaApi.getNearEarthObjectsAsync(Constants.API_KEY, todaysDate).await()
+
+                val nearEarthObjects = Network.nasaApi.getNearEarthObjectsAsync().await()
                 Timber.d("Retrieved Near Earth Objects from NASA API. Parsing JSON response.")
                 database.nearEarthObjectDao.insertAllNearEarthObjects(*parseAsteroidsJsonResult(JSONObject(nearEarthObjects)).asDatabaseModel())
                 Timber.d("Exiting IO Scope.")

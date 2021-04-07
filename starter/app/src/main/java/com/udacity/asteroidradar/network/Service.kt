@@ -19,9 +19,8 @@ interface NasaApiService {
     /**
      * Endpoint for Near earth objects
      */
-    @GET(value = "neo/rest/v1/feed")
-    fun getNearEarthObjectsAsync(@Query("api_key") apiKey: String,
-                                @Query("start_date") startDate: String) : Deferred<String>
+    @GET(value = "neo/rest/v1/feed&api_key={${Constants.API_KEY}}")
+    fun getNearEarthObjectsAsync() : Deferred<String>
 
     /**
      * Endpoint for Picture of the day
