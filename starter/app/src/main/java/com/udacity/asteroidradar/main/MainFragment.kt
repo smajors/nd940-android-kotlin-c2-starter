@@ -16,6 +16,7 @@ import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import com.udacity.asteroidradar.databinding.NearEarthObjectItemBinding
 import com.udacity.asteroidradar.domain.NearEarthObject
+import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 
 class MainFragment : Fragment() {
@@ -40,6 +41,17 @@ class MainFragment : Fragment() {
             viewModel.onObjectClick(asteroid)
         })
         binding.asteroidRecycler.adapter = adapter
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            /**
+             * Used to scroll the list to the top on data change
+             */
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                asteroid_recycler.smoothScrollToPosition(0)
+
+            }
+        })
 
         viewModel.asteroids.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -67,6 +79,13 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle menu item clicks
+        when (item.itemId) {
+            R.id.show_all_menu -> viewModel.setFilter(MainViewModel.ObjectFilter.WEEKLY)
+            R.id.show_rent_menu -> viewModel.setFilter(MainViewModel.ObjectFilter.TODAY)
+            R.id.show_buy_menu -> viewModel.setFilter(MainViewModel.ObjectFilter.ALL)
+        }
+
         return true
     }
 

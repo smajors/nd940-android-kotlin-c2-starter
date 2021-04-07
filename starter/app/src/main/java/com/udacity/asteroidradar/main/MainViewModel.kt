@@ -74,4 +74,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         WEEKLY
     }
 
+    fun setFilter(objectFilter: ObjectFilter) {
+        filter.postValue((objectFilter))
+    }
+
 }
